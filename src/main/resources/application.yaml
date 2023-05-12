@@ -22,18 +22,16 @@ server:
 security:
   mtls-reload:
     # Download mTls context each 10 seconds
-    reload-cron: 0/10 * * * * ? *
+    reload-cron: 0/30 * * * * ? *
     # Each OCI Vault has public crypto and management endpoints
-    vault-crypto-endpoint: https://bjqkhfbuaaaao-crypto.kms.eu-frankfurt-1.oraclecloud.com
+    vault-crypto-endpoint: ${VAULT_CRYPTO_ENDPOINT}
     # Certification Authority in OCI we have signed rotated certificates with
-    ca-ocid: ocid1.certificateauthority.oc1.eu-frankfurt-1.amaaaaaarxor3daapterg4ao3r5xdsovhe6tcwxoo5rmukkzcjdupk52rq5a
+    ca-ocid: ${CA_OCID}
     server:
-      cert-ocid: ocid1.certificate.oc1.eu-frankfurt-1.amaaaaaarxor3daa4onn6cc72zfs72cpwy2ixtsfcfu6ect6hyi65yigo7ca;
-      key-ocid: ocid1.key.oc1.eu-frankfurt-1.bjqkhfbuaaaao.abtheljt2wamixp4xbk7mhxvf2mq4us7bhdu7fm6dy4sfkh6w52kdzg6ltma
+      cert-ocid: ${SERVER_CERT_OCID}
+      key-ocid: ${SERVER_KEY_OCID}
       key-pass: password
     client:
-      cert-ocid: ocid1.certificate.oc1.eu-frankfurt-1.amaaaaaarxor3daa65nneicancdjusua4vet43hkhnsntp74womxre3td4uq;
-      key-ocid: ocid1.key.oc1.eu-frankfurt-1.bjqkhfbuaaaao.abtheljsnmfad52ttrxtpu35ac5foje7ddlzq7wbyv7ke23rhoqkfnza5epq
+      cert-ocid: ${CLIENT_CERT_OCID}
+      key-ocid: ${CLIENT_KEY_OCID}
       key-pass: password
-
-

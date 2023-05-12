@@ -1,8 +1,26 @@
 # Helidon mTLS context rotation OCI example
 Helidon mTLS context rotation with [OCI](https://www.oracle.com/cloud) [KMS](https://www.oracle.com/security/cloud-security/key-management) and [Certificates](https://www.oracle.com/security/cloud-security/ssl-tls-certificates) services
 
-1. [Setting up OCI](#setting-up-oci)  
-   1.1. [Prepare CA(Certification Authority)](#prepare-cacertification-authority)
+1. [Prerequisites](#prerequisites)  
+2. [Setting up OCI](#setting-up-oci)  
+   1. [Prepare CA(Certification Authority)](#prepare-cacertification-authority)
+   2. [Prepare keys](#prepare-keys)
+   3. [Prepare certificates](#prepare-certificates)
+3. [Configuration](#configuration)
+4. [Rotating mTLS certificates](#rotating-mtls-certificates)
+5. [Build and run example](#build-and-run-example)
+   1. [Build & Run](#build--run)
+   2. [Test with WebClient](#test-with-webclient)
+   3. [Test with cURL](#test-with-curl)
+
+
+## Prerequisites
+- JDK 17 or higher
+- Maven 3.6.1 or higher
+- OCI Tenancy with Vault [KMS](https://www.oracle.com/security/cloud-security/key-management) and [Certificate service](https://www.oracle.com/security/cloud-security/ssl-tls-certificates) (all features used in the example are free of charge)
+- [OCI CLI](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm#Quickstart) 3.2.1 or later with properly configured `~/.oci/config` to access your tenancy
+- OpenSSL (on deb based distros `apt install openssl`) 
+- [Keytool](https://docs.oracle.com/en/java/javase/17/docs/specs/man/keytool.html) (comes with JDK installation)
 
 ## Setting up OCI
 ### Prepare CA(Certification Authority)
@@ -41,3 +59,59 @@ Follow [OCI documentation](https://docs.oracle.com/en-us/iaas/Content/certificat
    7. Check `Skip Revocation` to keep it simple
    8. Select `Create Certificate Authority` button on the summary page
    9. Notice OCID of the newly created CA, we will need it later
+
+### Prepare keys
+TODO
+### Prepare certificates
+TODO
+
+## Configuration
+Following env variables to be configured in [config.sh](certs%2Fconfig.sh)
+for both [rotating](#rotating-mtls-certificates) certificates and [running](#build--run) the examples.
+- **COMPARTMENT_OCID** - OCID of compartment the services are in
+- **VAULT_CRYPTO_ENDPOINT** - Each OCI Vault has public crypto and management endpoints, we need to specify crypto endpoint of the vault we are rotating the private keys in (example expects both client and server to store private key in the same vault)
+- **VAULT_MANAGEMENT_ENDPOINT** - crypto endpoint of the vault we are rotating the private keys in
+- **CA_OCID** - OCID of the CA authority we have created in [Prepare CA](#prepare-cacertification-authority) step
+
+- **SERVER_CERT_OCID** - OCID of the server certificate(not the specific version!)
+- **SERVER_KEY_OCID** - OCID of the server private key in vault(not the specific version!)
+
+- **CLIENT_CERT_OCID** - OCID of the client certificate(not the specific version!)
+- **CLIENT_KEY_OCID** - OCID of the client private key in vault(not the specific version!)
+
+## Rotating mTLS certificates
+Make sure you are in the directory [./certs](certs).
+```shell
+bash rotateKeys.sh
+```
+⚠️ Keep in mind that rotation creates new [versions](https://docs.oracle.com/en-us/iaas/Content/certificates/rotation-states.htm), OCIDs of the keys and certificates stays the same, and you don't need to change your configuration.
+
+## Build and run example
+
+### Build & Run
+
+```shell
+mvn clean package
+```
+
+Run mTLS secured web server:
+```shell
+source ./certs/config.sh && \
+java -jar ./target/mtls-rotation.jar
+```
+Reload interval can be overridden with:
+```shell
+source ./certs/config.sh && \
+java -Dsecurity.mtls-reload.reload-cron="0/20 * * * * ? *" \
+-jar ./target/mtls-rotation.jar
+```
+### Test with WebClient
+```shell
+source ./certs/config.sh && \
+java -cp ./target/mtls-rotation.jar io.helidon.example.mtls.Client
+```
+
+### Test with cURL
+```shell
+curl --key key-pair.pem --cert cert-chain.cer --cacert ca.cer -v https://localhost:8443
+```

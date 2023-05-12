@@ -1,4 +1,4 @@
-package me.daniel.se.quickstart;
+package io.helidon.example.mtls;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
@@ -106,15 +106,6 @@ public class OCImTLSManager {
         }
     }
 
-    private void saveToFile(KeyStore ks, String fileName) {
-        try {
-            FileOutputStream fos = new FileOutputStream(fileName);
-            ks.store(fos, new char[0]);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private Certificate[] loadCert(String certOcid) throws Exception {
         try (CertificatesClient client = CertificatesClient.builder()
                 .build(ociConfigProvider)) {
@@ -159,6 +150,15 @@ public class OCImTLSManager {
         public String toString() {
             return this.name()
                     .toLowerCase();
+        }
+    }
+
+    private void saveToFile(KeyStore ks, String fileName) {
+        try {
+            FileOutputStream fos = new FileOutputStream(fileName);
+            ks.store(fos, new char[0]);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

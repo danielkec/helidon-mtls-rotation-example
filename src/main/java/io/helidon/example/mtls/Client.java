@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package me.daniel.se.quickstart;
+package io.helidon.example.mtls;
 
 import javax.net.ssl.SSLContext;
 
+import io.helidon.common.LogConfig;
 import io.helidon.config.Config;
 import io.helidon.webclient.WebClient;
 import io.helidon.webclient.WebClientTls;
 
-import static me.daniel.se.quickstart.OCImTLSManager.Type.CLIENT;
+import static io.helidon.example.mtls.OCImTLSManager.Type.CLIENT;
 
 public class Client {
 
+    private static final String MTLS_PROTECTED_URL = "https://localhost:8443";
+
     public static void main(String[] args) {
+        LogConfig.configureRuntime();
         Config config = Config.create();
         SSLContext sslContext = OCImTLSManager
                 .create(CLIENT, config.get("security.mtls-reload"))
@@ -33,8 +37,8 @@ public class Client {
 
         WebClient webClient = createWebClient(sslContext);
 
-        System.out.println("Contacting secured endpoint!");
-        System.out.println("Response: " + callSecured(webClient, 8443));
+        System.out.println("Contacting mTLS secured endpoint " + MTLS_PROTECTED_URL);
+        System.out.println("Response: " + callSecured(webClient));
     }
 
     static WebClient createWebClient(SSLContext sslContext) {
@@ -45,9 +49,9 @@ public class Client {
                 .build();
     }
 
-    static String callSecured(WebClient webClient, int port) {
+    static String callSecured(WebClient webClient) {
         return webClient.get()
-                .uri("https://localhost:" + port)
+                .uri(MTLS_PROTECTED_URL)
                 .request(String.class)
                 .await();
     }

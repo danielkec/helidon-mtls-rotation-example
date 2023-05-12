@@ -1,4 +1,4 @@
-package me.daniel.se.quickstart;
+package io.helidon.example.mtls;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,11 +18,8 @@ import io.helidon.webserver.Routing;
 import io.helidon.webserver.WebServer;
 import io.helidon.webserver.WebServerTls;
 
-import static me.daniel.se.quickstart.OCImTLSManager.Type.SERVER;
+import static io.helidon.example.mtls.OCImTLSManager.Type.SERVER;
 
-/**
- * curl --key key-pair.pem --cert cert-chain.cer --cacert ca.cer -v https://localhost:8443
- */
 public final class Main {
     private final Config config;
     private final OCImTLSManager mTLSManager;
@@ -49,6 +46,7 @@ public final class Main {
 
                 .addRouting(Routing.builder()
                                     // Unsecured endpoint triggers mTls update
+                                    // mTLS update is blocking, needs to be offloaded from reactive handler thread
                                     .get("/", (req, res) -> async.invoke(() -> {
                                                 updateServerSslContext(req.webServer());
                                                 return "mTls context reloaded!";
