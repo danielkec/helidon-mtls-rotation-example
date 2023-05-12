@@ -15,7 +15,8 @@
 
     <properties>
         <mainClass>io.helidon.example.mtls.Main</mainClass>
-        <bouncy-castle.version>1.73</bouncy-castle.version>
+        <bouncy-castle.version>1.70</bouncy-castle.version>
+        <slf4j-jul.version>1.7.32</slf4j-jul.version>
     </properties>
 
     <dependencies>
@@ -42,7 +43,7 @@
 
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk15to18</artifactId>
+            <artifactId>bcpkix-jdk15on</artifactId>
             <version>${bouncy-castle.version}</version>
         </dependency>
 
@@ -53,10 +54,6 @@
         <dependency>
             <groupId>com.oracle.oci.sdk</groupId>
             <artifactId>oci-java-sdk-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.oracle.oci.sdk</groupId>
-            <artifactId>oci-java-sdk-secrets</artifactId>
         </dependency>
         <dependency>
             <groupId>com.oracle.oci.sdk</groupId>
@@ -78,18 +75,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
-            <version>1.7.32</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <scope>test</scope>
+            <version>${slf4j-jul.version}</version>
         </dependency>
     </dependencies>
 

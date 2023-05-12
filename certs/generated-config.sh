@@ -1,0 +1,7 @@
+#!/bin/bash
+## Content of this file gets rewritten by createKeys.sh
+export SERVER_CERT_OCID=ocid1.certificate.oc1.eu-frankfurt-1.amaaaaaarxor3daadwjvgisu6kr5h7tathaukjvyif2ge7ivsqa7nbafztgq
+export SERVER_KEY_OCID=ocid1.key.oc1.eu-frankfurt-1.bjqkhfbuaaaao.abtheljts5iho47azdlyi2jem676crzsvswiool3ac7lvnq5w5l4weytf4zq
+
+export CLIENT_CERT_OCID=ocid1.certificate.oc1.eu-frankfurt-1.amaaaaaarxor3daaehzvah3zd4pkdv7drobifkbkd6ywpnuepb5b3p7a5iya
+export CLIENT_KEY_OCID=ocid1.key.oc1.eu-frankfurt-1.bjqkhfbuaaaao.abtheljsc6arv2rop2e7ght2s7w5bojhhlqtgquevj3anlwwemtr5uvylmpa

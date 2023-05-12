@@ -4,8 +4,7 @@ Helidon mTLS context rotation with [OCI](https://www.oracle.com/cloud) [KMS](htt
 1. [Prerequisites](#prerequisites)  
 2. [Setting up OCI](#setting-up-oci)  
    1. [Prepare CA(Certification Authority)](#prepare-cacertification-authority)
-   2. [Prepare keys](#prepare-keys)
-   3. [Prepare certificates](#prepare-certificates)
+   2. [Prepare keys and certificates](#prepare-keys-and-certificates)
 3. [Configuration](#configuration)
 4. [Rotating mTLS certificates](#rotating-mtls-certificates)
 5. [Build and run example](#build-and-run-example)
@@ -60,10 +59,11 @@ Follow [OCI documentation](https://docs.oracle.com/en-us/iaas/Content/certificat
    8. Select `Create Certificate Authority` button on the summary page
    9. Notice OCID of the newly created CA, we will need it later
 
-### Prepare keys
-TODO
-### Prepare certificates
-TODO
+### Prepare keys and certificates
+Make sure you are in the directory [./certs](certs).
+```shell
+bash createKeys.sh
+```
 
 ## Configuration
 Following env variables to be configured in [config.sh](certs%2Fconfig.sh)
@@ -97,17 +97,20 @@ mvn clean package
 Run mTLS secured web server:
 ```shell
 source ./certs/config.sh && \
+source ./certs/generated-config.sh && \
 java -jar ./target/mtls-rotation.jar
 ```
 Reload interval can be overridden with:
 ```shell
 source ./certs/config.sh && \
+source ./certs/generated-config.sh && \
 java -Dsecurity.mtls-reload.reload-cron="0/20 * * * * ? *" \
 -jar ./target/mtls-rotation.jar
 ```
 ### Test with WebClient
 ```shell
 source ./certs/config.sh && \
+source ./certs/generated-config.sh && \
 java -cp ./target/mtls-rotation.jar io.helidon.example.mtls.Client
 ```
 

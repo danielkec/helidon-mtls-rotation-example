@@ -3,9 +3,3 @@ export COMPARTMENT_OCID=ocid1.tenancy.oc1..aaaaaaaaonou3anbsghdg723hfoodyj3y6gmx
 export VAULT_CRYPTO_ENDPOINT=https://bjqkhfbuaaaao-crypto.kms.eu-frankfurt-1.oraclecloud.com
 export VAULT_MANAGEMENT_ENDPOINT=https://bjqkhfbuaaaao-management.kms.eu-frankfurt-1.oraclecloud.com
 export CA_OCID=ocid1.certificateauthority.oc1.eu-frankfurt-1.amaaaaaarxor3daapterg4ao3r5xdsovhe6tcwxoo5rmukkzcjdupk52rq5a
-
-export SERVER_CERT_OCID=ocid1.certificate.oc1.eu-frankfurt-1.amaaaaaarxor3daa4onn6cc72zfs72cpwy2ixtsfcfu6ect6hyi65yigo7ca;
-export SERVER_KEY_OCID=ocid1.key.oc1.eu-frankfurt-1.bjqkhfbuaaaao.abtheljt2wamixp4xbk7mhxvf2mq4us7bhdu7fm6dy4sfkh6w52kdzg6ltma
-
-export CLIENT_CERT_OCID=ocid1.certificate.oc1.eu-frankfurt-1.amaaaaaarxor3daa65nneicancdjusua4vet43hkhnsntp74womxre3td4uq;
-export CLIENT_KEY_OCID=ocid1.key.oc1.eu-frankfurt-1.bjqkhfbuaaaao.abtheljsnmfad52ttrxtpu35ac5foje7ddlzq7wbyv7ke23rhoqkfnza5epq

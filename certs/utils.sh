@@ -9,10 +9,8 @@ WRAPPED_TEMPORARY_AES_KEY_FILE=wrappedTmpAES.key
 WRAPPED_TARGET_KEY_FILE=wrappedUploadedKey.key
 WRAPPED_KEY_MATERIAL_FILE=readyToUpload.der
 
-uploadKeyToVault() {
-
+prepareKeyToUpload() {
   KEYSTORE_FILE=${1}.jks
-  KEY_OCID=$2
 
   # Obtain OCI wrapping key
   oci kms management wrapping-key get \
@@ -58,6 +56,33 @@ uploadKeyToVault() {
   JSON_KEY_MATERIAL="{\"keyMaterial\": \"$KEY_MATERIAL_AS_BASE64\",\"wrappingAlgorithm\": \"RSA_OAEP_AES_SHA256\"}"
 
   echo $JSON_KEY_MATERIAL >key-material.json
+}
+
+test(){
+  KEC="Aha!"
+  echo $KEC
+}
+
+createKeyInVault() {
+  TYPE=$1
+  KEY_NAME=${2}
+
+  export NEW_KEY_OCID=$(oci kms management key import \
+    --compartment-id ${COMPARTMENT_OCID} \
+    --display-name ${KEY_NAME}-${TYPE} \
+    --key-shape '{"algorithm": "RSA", "length": 256}' \
+    --protection-mode SOFTWARE \
+    --endpoint ${VAULT_MANAGEMENT_ENDPOINT} \
+    --wrapped-import-key file://key-material.json \
+    --query 'data.id' \
+    --raw-output)
+
+  echo "$NEW_KEY_OCID"
+}
+
+rotateKeyInVault() {
+  TYPE=$1
+  KEY_OCID=${2}
 
   oci kms management key-version import \
     --key-id $KEY_OCID \
@@ -65,9 +90,8 @@ uploadKeyToVault() {
     --wrapped-import-key file://key-material.json
 }
 
-rotateCert() {
+genCertAndCSR() {
   TYPE=$1
-  CERT_OCID=$2
 
   # Get CA cert
   oci certificates certificate-authority-bundle get --query 'data."certificate-pem"' \
@@ -92,13 +116,26 @@ rotateCert() {
     -validity 60 \
     -keyalg rsa \
     -file ${TYPE}.csr
+}
 
+uploadNewCert() {
+  TYPE=$1
+  CERT_NAME=$2
   ## Create server/client certificate in OCI
-  #oci certs-mgmt certificate create-certificate-managed-externally-issued-by-internal-ca \
-  #--compartment-id ${COMPARTMENT_OCID} \
-  #--issuer-certificate-authority-id ${CA_OCID} \
-  #--name test-mtls-${TYPE}-0 \
-  #--csr-pem "$(cat ${TYPE}.csr)"
+  export NEW_CERT_OCID=$(oci certs-mgmt certificate create-certificate-managed-externally-issued-by-internal-ca \
+  --compartment-id ${COMPARTMENT_OCID} \
+  --issuer-certificate-authority-id ${CA_OCID} \
+  --name ${CERT_NAME}-${TYPE} \
+  --csr-pem "$(cat ${TYPE}.csr)" \
+  --query 'data.id' \
+  --raw-output)
+
+  echo "$NEW_CERT_OCID"
+}
+
+rotateCert() {
+  TYPE=$1
+  CERT_OCID=$2
 
   ## Renew server certificate in OCI
   oci certs-mgmt certificate update-certificate-managed-externally \
