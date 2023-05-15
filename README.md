@@ -2,9 +2,10 @@
 Helidon mTLS context rotation with [OCI](https://www.oracle.com/cloud) [KMS](https://www.oracle.com/security/cloud-security/key-management) and [Certificates](https://www.oracle.com/security/cloud-security/ssl-tls-certificates) services
 
 1. [Prerequisites](#prerequisites)  
-2. [Setting up OCI](#setting-up-oci)  
-   1. [Prepare CA(Certification Authority)](#prepare-cacertification-authority)
-   2. [Prepare keys and certificates](#prepare-keys-and-certificates)
+2. [Setting up OCI](#setting-up-oci)
+   1. [Configuration](#configuration) 
+   2. [Prepare CA(Certification Authority)](#prepare-cacertification-authority)
+   3. [Prepare keys and certificates](#prepare-keys-and-certificates)
 3. [Configuration](#configuration)
 4. [Rotating mTLS certificates](#rotating-mtls-certificates)
 5. [Build and run example](#build-and-run-example)
@@ -59,13 +60,7 @@ Follow [OCI documentation](https://docs.oracle.com/en-us/iaas/Content/certificat
    8. Select `Create Certificate Authority` button on the summary page
    9. Notice OCID of the newly created CA, we will need it later
 
-### Prepare keys and certificates
-Make sure you are in the directory [./certs](certs).
-```shell
-bash createKeys.sh
-```
-
-## Configuration
+### Configuration
 Following env variables to be configured in [config.sh](certs%2Fconfig.sh)
 for both [rotating](#rotating-mtls-certificates) certificates and [running](#build--run) the examples.
 - **COMPARTMENT_OCID** - OCID of compartment the services are in
@@ -73,11 +68,18 @@ for both [rotating](#rotating-mtls-certificates) certificates and [running](#bui
 - **VAULT_MANAGEMENT_ENDPOINT** - crypto endpoint of the vault we are rotating the private keys in
 - **CA_OCID** - OCID of the CA authority we have created in [Prepare CA](#prepare-cacertification-authority) step
 
+Following env variables are generated automatically by [createKeys.sh](certs%2FcreateKeys.sh) or needs to be configured manually for [rotateKeys.sh](certs%2FrotateKeys.sh) in [generated-config.sh](certs%2Fgenerated-config.sh)
 - **SERVER_CERT_OCID** - OCID of the server certificate(not the specific version!)
 - **SERVER_KEY_OCID** - OCID of the server private key in vault(not the specific version!)
 
 - **CLIENT_CERT_OCID** - OCID of the client certificate(not the specific version!)
 - **CLIENT_KEY_OCID** - OCID of the client private key in vault(not the specific version!)
+
+### Prepare keys and certificates
+Make sure you are in the directory [./certs](certs).
+```shell
+bash createKeys.sh
+```
 
 ## Rotating mTLS certificates
 Make sure you are in the directory [./certs](certs).
